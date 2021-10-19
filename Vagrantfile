@@ -9,9 +9,21 @@ Vagrant.configure("2") do |config|
 
   #configure provisioners on tha machine
   config.vm.provision :docker
+  config.vm.provision :docker_compose
 
-  config.vm.define "server-1" do |dockerserver|
-    dockerserver.vm.network "private_network", ip:'192.168.33.60'
-    dockerserver.vm.hostname = "dockerserver"
+  config.vm.define "server-1" do |server1|
+    server1.vm.network "private_network", ip:'192.168.33.60'
+    server1.vm.hostname = "server-1"
+    server1.vm.provision "shell", inline: <<-SHELL
+      apt-get -y update
+      apt-get -y install nginx
+      service nginx start
+    SHELL
   end
+
+  config.vm.define "server-2" do |server2|
+    server2.vm.network "private_network", ip:'192.168.33.61'
+    server2.vm.hostname = "server-2"
+  end
+
 end
