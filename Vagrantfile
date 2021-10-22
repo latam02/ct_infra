@@ -14,12 +14,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "ci-server" do |ciserver|
     ciserver.vm.network "private_network", ip:'192.168.33.60'
     ciserver.vm.hostname = "ci-server"
-  end
-
-
-  config.vm.define "server-2" do |server2|
-    server2.vm.network "private_network", ip:'192.168.33.61'
-    server2.vm.hostname = "server-2"
-    # server2.vm.provision :docker_compose, yml: "/vagrant/MachineLearning/docker-compose.yml", rebuild: true, run: "always"
+    ciserver.vm.provision :file, source:"./docker/docker-compose.ci.yml", destination:"docker-compose.yml"
+    ciserver.vm.provision :docker_compose, yml:"/home/vagrant/docker-compose.yml", run:"always"
   end
 end
